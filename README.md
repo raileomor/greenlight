@@ -12,3 +12,12 @@ Let's Go Further
 - Project Setup and Skeleton Structure
 - A Basic HTTP Server
 - API Endpoints and RESTful Routing
+
+3. Sending JSON Responses
+
+- Fixed-Format JSON
+- JSON Encoding
+- Encoding Structs
+- Formatting and Enveloping Responses
+- Advanced JSON Customization
+- Sending Error Messages
