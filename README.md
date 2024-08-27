@@ -21,3 +21,11 @@ Let's Go Further
 - Formatting and Enveloping Responses
 - Advanced JSON Customization
 - Sending Error Messages
+
+4. Parsing JSON Requests
+
+- JSON Decoding
+- Managing Bad Requests
+- Restricting Inputs
+- Custom JSON Decoding
+- Validating JSON Input
