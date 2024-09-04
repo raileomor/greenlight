@@ -62,3 +62,11 @@ Let's Go Further
 
 - An Overview of SQL Migrations
 - Working with SQL Migrations
+
+7. CRUD Operations
+
+- Setting up the Movie Model
+- Creating a New Movie
+- Fetching a Movie
+- Updating a Movie
+- Deleting a Movie
