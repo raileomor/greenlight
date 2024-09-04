@@ -25,6 +25,14 @@ $ migrate -path=./migrations -database=$EXAMPLE_DSN force 1
 $ migrate -source="s3://<bucket>/<path>" -database=$EXAMPLE_DSN up
 $ migrate -source="github://owner/repo/path#ref" -database=$EXAMPLE_DSN up
 $ migrate -source="github://user:personal-access-token@owner/repo/path#ref" -database=$EXAMPLE_DSN up
+
+# Sending a bunch of concurrent requests
+$ xargs -I % -P8 curl -X PATCH -d '{"runtime": "97 mins"}' "localhost:4000/v1/movies/4" < <(printf '%s\n' {1..8})
+# Getting the request time
+$ curl -w '\nTime: %{time_total}s \n' localhost:4000/v1/movies/1
+# Testing timeouts outside of PostgreSQL
+$ go run ./cmd/api -db-max-open-conns=1
+$ curl localhost:4000/v1/movies/1 & curl localhost:4000/v1/movies/1 &
 ```
 
 Let's Go Further
@@ -70,3 +78,9 @@ Let's Go Further
 - Fetching a Movie
 - Updating a Movie
 - Deleting a Movie
+
+8. Advanced CRUD Operations
+
+- Handling Partial Updates
+- Optimistic Concurrency Control
+- Managing SQL Query Timeouts
