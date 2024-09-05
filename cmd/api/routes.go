@@ -24,6 +24,9 @@ func (app *application) routes() http.Handler {
 	// http.MethodPost are constants which equate to the strings "GET" and "POST"
 	// respectively.
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
+
+	// Add the route for the GET /v1/movies endpoint.
+	router.HandlerFunc(http.MethodGet, "/v1/movies", app.listMoviesHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/movies", app.createMovieHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/movies/:id", app.showMovieHandler)
 	// Require a PATCH request, rather than PUT.

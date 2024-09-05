@@ -84,3 +84,14 @@ Let's Go Further
 - Handling Partial Updates
 - Optimistic Concurrency Control
 - Managing SQL Query Timeouts
+
+9. Filtering, Sorting, and Pagination
+
+- Parsing Query String Parameters
+- Validating Query String Parameters
+- Listing Data
+- Filtering Lists
+- Full-Text Search
+- Sorting Lists
+- Paginating Lists
+- Returning Pagination Metadata
