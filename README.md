@@ -33,6 +33,12 @@ $ curl -w '\nTime: %{time_total}s \n' localhost:4000/v1/movies/1
 # Testing timeouts outside of PostgreSQL
 $ go run ./cmd/api -db-max-open-conns=1
 $ curl localhost:4000/v1/movies/1 & curl localhost:4000/v1/movies/1 &
+
+# Sending shutdown signals
+$ pgrep -l api
+$ pkill -SIGTERM api
+$ pkill -SIGKILL api
+$ curl localhost:4000/v1/healthcheck & pkill -SIGTERM api
 ```
 
 Let's Go Further
@@ -101,3 +107,9 @@ Let's Go Further
 - Global Rate Limiting
 - IP-based Rate Limiting
 - Configuring the Rate Limiters
+
+11. Graceful Shutdown
+
+- Sending Shutdown Signals
+- Intercepting Shutdown Signals
+- Executing the Shutdown
