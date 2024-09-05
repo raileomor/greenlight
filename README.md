@@ -95,3 +95,9 @@ Let's Go Further
 - Sorting Lists
 - Paginating Lists
 - Returning Pagination Metadata
+
+10. Rate Limiting
+
+- Global Rate Limiting
+- IP-based Rate Limiting
+- Configuring the Rate Limiters
