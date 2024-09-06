@@ -113,3 +113,9 @@ Let's Go Further
 - Sending Shutdown Signals
 - Intercepting Shutdown Signals
 - Executing the Shutdown
+
+12. User Model Setup and Registration
+
+- Setting up the Users Database Table
+- Setting up the Users Model
+- Registering a User
