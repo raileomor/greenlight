@@ -6,6 +6,7 @@ import (
 	"flag"
 	"log/slog"
 	"os"
+	"sync"
 	"time"
 
 	// Import the pq driver so that it can register itself with the database/sql
@@ -13,6 +14,7 @@ import (
 	// compiler complaining that the package isn't being used.
 	_ "github.com/lib/pq"
 	"github.com/raileomor/greenlight/internal/data"
+	"github.com/raileomor/greenlight/internal/mailer"
 )
 
 // Declare a string containing the application version number. Later in the book we'll
@@ -44,6 +46,14 @@ type config struct {
 		burst   int
 		enabled bool
 	}
+	// Update the config struct to hold the SMTP server settings.
+	smtp struct {
+		host     string
+		port     int
+		username string
+		password string
+		sender   string
+	}
 }
 
 // Define an application struct to hold the dependencies for our HTTP handlers, helpers,
@@ -53,6 +63,8 @@ type application struct {
 	config config
 	logger *slog.Logger
 	models data.Models
+	mailer mailer.Mailer
+	wg     sync.WaitGroup
 }
 
 func main() {
@@ -82,6 +94,14 @@ func main() {
 	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 4, "Rate limiter maximum burst")
 	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
 
+	// Read the SMTP server configuration settings into the config struct, using the
+	// Mailtrap settings as the default values.
+	flag.StringVar(&cfg.smtp.host, "smtp-host", "sandbox.smtp.mailtrap.io", "SMTP host")
+	flag.IntVar(&cfg.smtp.port, "smtp-port", 25, "SMTP port")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", "87ad56a98cf3a8", "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", "1fee7d67aa308e", "SMTP password")
+	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "Greenlight <no-reply@greenlight.rlm-home.net>", "SMTP sender")
+
 	flag.Parse()
 
 	// Initialize a new structured logger which writes log entries to the standard out
@@ -105,12 +125,13 @@ func main() {
 	// established.
 	logger.Info("database connection pool established")
 
-	// Declare an instance of the application struct, containing the config struct and
-	// the logger.
+	// Declare an instance of the application struct, containing the config struct,
+	// logger, models and mailer.
 	app := &application{
 		config: cfg,
 		logger: logger,
 		models: data.NewModels(db),
+		mailer: mailer.New(cfg.smtp.host, cfg.smtp.port, cfg.smtp.username, cfg.smtp.password, cfg.smtp.sender),
 	}
 
 	// Call app.serve() to start the server.

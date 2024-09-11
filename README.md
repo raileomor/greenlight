@@ -119,3 +119,11 @@ Let's Go Further
 - Setting up the Users Database Table
 - Setting up the Users Model
 - Registering a User
+
+13. Sending Emails
+
+- SMTP Server Setup
+- Creating Email Templates
+- Sending a Welcome Email
+- Sending Background Emails
+- Graceful Shutdown of Background Tasks
