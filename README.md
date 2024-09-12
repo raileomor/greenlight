@@ -127,3 +127,10 @@ Let's Go Further
 - Sending a Welcome Email
 - Sending Background Emails
 - Graceful Shutdown of Background Tasks
+
+14. User Activation
+
+- Setting up the Tokens Database Table
+- Creating Secure Activation Tokens
+- Sending Activation Tokens
+- Activating a User
