@@ -134,3 +134,9 @@ Let's Go Further
 - Creating Secure Activation Tokens
 - Sending Activation Tokens
 - Activating a User
+
+15. Authentication
+
+- Authentication Options
+- Generating Authentication Tokens
+- Authenticating Requests
