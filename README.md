@@ -140,3 +140,11 @@ Let's Go Further
 - Authentication Options
 - Generating Authentication Tokens
 - Authenticating Requests
+
+16. Permission-based Authorization
+
+- Requiring User Activation
+- Setting up the Permissions Database Table
+- Setting up the Permissions Model
+- Checking Permissions
+- Granting Permissions
