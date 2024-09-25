@@ -39,6 +39,11 @@ $ pgrep -l api
 $ pkill -SIGTERM api
 $ pkill -SIGKILL api
 $ curl localhost:4000/v1/healthcheck & pkill -SIGTERM api
+
+# Demonstrating the Same-Origin Policy
+$ go run ./cmd/api -cors-trusted-origins="http://localhost:9000 http://localhost:9001"
+$ go run ./cmd/examples/cors/simple
+$ go run ./cmd/examples/cors/preflight
 ```
 
 Let's Go Further
@@ -148,3 +153,10 @@ Let's Go Further
 - Setting up the Permissions Model
 - Checking Permissions
 - Granting Permissions
+
+17. Cross Origin Requests
+
+- An Overview of CORS
+- Demonstrating the Same-Origin Policy
+- Simple CORS Requests
+- Preflight CORS Requests
