@@ -44,6 +44,13 @@ $ curl localhost:4000/v1/healthcheck & pkill -SIGTERM api
 $ go run ./cmd/api -cors-trusted-origins="http://localhost:9000 http://localhost:9001"
 $ go run ./cmd/examples/cors/simple
 $ go run ./cmd/examples/cors/preflight
+
+# Testing some load
+# Stats at http://localhost:4000/debug/vars
+$ brew install hey
+$ hey -d "$BODY" -m "POST" http://localhost:4000/v1/tokens/authentication
+# You can play with diferent args
+$ go run ./cmd/api -limiter-enabled=false -db-max-open-conns=50 -db-max-idle-conns=50 -db-max-idle-time=20s -port=4000
 ```
 
 Let's Go Further
@@ -160,3 +167,10 @@ Let's Go Further
 - Demonstrating the Same-Origin Policy
 - Simple CORS Requests
 - Preflight CORS Requests
+
+18. Metrics
+
+- Exposing Metrics with Expvar
+- Creating Custom Metrics
+- Request-level Metrics
+- Recording HTTP Status Codes
