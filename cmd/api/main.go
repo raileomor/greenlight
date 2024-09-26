@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"expvar"
 	"flag"
+	"fmt"
 	"log/slog"
 	"os"
 	"runtime"
@@ -18,12 +19,13 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/raileomor/greenlight/internal/data"
 	"github.com/raileomor/greenlight/internal/mailer"
+	"github.com/raileomor/greenlight/internal/vcs"
 )
 
-// Declare a string containing the application version number. Later in the book we'll
-// generate this automatically at build time, but for now we'll just store the version
-// number as a hard-coded global constant.
-const version = "1.0.0"
+// Make version a variable (rather than a constant) and set its value to vcs.Version().
+var (
+	version = vcs.Version()
+)
 
 // Define a config struct to hold all the configuration settings for our application.
 // The configuration settings will be the network port that we want the server to
@@ -87,7 +89,7 @@ func main() {
 	// Read the DSN value from the db-dsn command-line flag into the config struct.
 	// Use the value of the GREENLIGHT_DB_DSN environment variable as the default value
 	// for our db-dsn command-line flag.
-	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("GREENLIGHT_DB_DSN"), "PostgreSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "PostgreSQL DSN")
 
 	// Read the connection pool settings from command-line flags into the config struct.
 	// Notice that the default values we're using are the ones we discussed above?
@@ -120,7 +122,17 @@ func main() {
 		return nil
 	})
 
+	// Create a new version boolean flag with the default value of false.
+	displayVersion := flag.Bool("version", false, "Display version and exit")
+
 	flag.Parse()
+
+	// If the version flag value is true, then print out the version number and
+	// immediately exit.
+	if *displayVersion {
+		fmt.Printf("Version:\t%s\n", version)
+		os.Exit(0)
+	}
 
 	// Initialize a new structured logger which writes log entries to the standard out
 	// stream.

@@ -51,6 +51,17 @@ $ brew install hey
 $ hey -d "$BODY" -m "POST" http://localhost:4000/v1/tokens/authentication
 # You can play with diferent args
 $ go run ./cmd/api -limiter-enabled=false -db-max-open-conns=50 -db-max-idle-conns=50 -db-max-idle-time=20s -port=4000
+
+# Using Makefiles
+$ make help
+$ make run/api
+$ make tidy
+$ make audit
+$ make build/api
+
+# Building and executing binaries
+$ make build/api
+$ ./bin/api -version
 ```
 
 Let's Go Further
@@ -174,3 +185,12 @@ Let's Go Further
 - Creating Custom Metrics
 - Request-level Metrics
 - Recording HTTP Status Codes
+
+19. Building, Versioning and Quality Control
+
+- Creating and Using Makefiles
+- Managing Environment Variables
+- Quality Controlling Code
+- Module Proxies and Vendoring
+- Building Binaries
+- Managing and Automating Version Numbers
