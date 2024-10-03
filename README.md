@@ -62,6 +62,30 @@ $ make build/api
 # Building and executing binaries
 $ make build/api
 $ ./bin/api -version
+
+# Creating a SSH key
+$ ssh-keygen -t rsa -b 4096 -C "greenlight@greenlight.rlm-home.net" -f $HOME/.ssh/id_rsa_greenlight
+$ ssh-add $HOME/.ssh/id_rsa_greenlight
+$ ssh-add -l
+
+# Deployment and Hosting
+# Note: Edit the production_host_ip address in the Makefile
+
+# Running the scripts with root
+$ rsync -rP --delete ./remote/setup root@161.35.71.158:/root
+$ ssh -t root@161.35.71.158 "bash /root/setup/01.sh"
+
+# or with unprivilege user
+$ rsync -rP --delete ./remote/setup user@161.35.71.158:/home/user
+$ ssh -t user@161.35.71.158 "sudo bash /home/user/setup/01.sh"
+
+# Can't connect with the user greenlight?
+# Edit /home/greenlight/.ssh/authorized_keys and remove the following line:
+# no-port-forwarding,no-agent-forwarding,no-X11-forwarding,command="echo 'Please login as the user \"xxxx\" rather than the user \"greenlight\".';echo;sleep 10;exit 142"
+$ make production/connect
+
+# Running the api as a background service
+$ make production/deploy/api
 ```
 
 Let's Go Further
@@ -194,3 +218,11 @@ Let's Go Further
 - Module Proxies and Vendoring
 - Building Binaries
 - Managing and Automating Version Numbers
+
+20. Deployment and Hosting
+
+- Creating a Digital Ocean Droplet
+- Server Configuration and Installing Software
+- Deployment and Executing Migrations
+- Running the API as a Background Service
+- Using Caddy as a Reverse Proxy
