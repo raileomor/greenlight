@@ -226,3 +226,7 @@ Let's Go Further
 - Deployment and Executing Migrations
 - Running the API as a Background Service
 - Using Caddy as a Reverse Proxy
+
+21. Appendices
+
+- Managing Password Resets
