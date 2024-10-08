@@ -230,3 +230,4 @@ Let's Go Further
 21. Appendices
 
 - Managing Password Resets
+- Creating Additional Activation Tokens
