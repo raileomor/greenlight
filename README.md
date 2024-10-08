@@ -231,3 +231,4 @@ Let's Go Further
 
 - Managing Password Resets
 - Creating Additional Activation Tokens
+- Authentication with JSON Web Tokens

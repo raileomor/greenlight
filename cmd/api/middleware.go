@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pascaldekloe/jwt"
 	"github.com/raileomor/greenlight/internal/data"
-	"github.com/raileomor/greenlight/internal/validator"
 	"github.com/tomasen/realip"
 	"golang.org/x/time/rate"
 )
@@ -147,31 +147,53 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		// Extract the actual authentication token from the header parts.
 		token := headerParts[1]
 
-		// Validate the token to make sure it is in a sensible format.
-		v := validator.New()
+		// Parse the JWT and extract the claims. This will return an error if the JWT 
+        // contents doesn't match the signature (i.e. the token has been tampered with)
+        // or the algorithm isn't valid.
+        claims, err := jwt.HMACCheck([]byte(token), []byte(app.config.jwt.secret))
+        if err != nil {
+            app.invalidAuthenticationTokenResponse(w, r)
+            return
+        }
 
-		// If the token isn't valid, use the invalidAuthenticationTokenResponse()
-		// helper to send a response, rather than the failedValidationResponse() helper
-		// that we'd normally use.
-		if data.ValidateTokenPlaintext(v, token); !v.Valid() {
-			app.invalidAuthenticationTokenResponse(w, r)
-			return
-		}
+        // Check if the JWT is still valid at this moment in time.
+        if !claims.Valid(time.Now()) {
+            app.invalidAuthenticationTokenResponse(w, r)
+            return
+        }
 
-		// Retrieve the details of the user associated with the authentication token,
-		// again calling the invalidAuthenticationTokenResponse() helper if no
-		// matching record was found. IMPORTANT: Notice that we are using
-		// ScopeAuthentication as the first parameter here.
-		user, err := app.models.Users.GetForToken(data.ScopeAuthentication, token)
-		if err != nil {
-			switch {
-			case errors.Is(err, data.ErrRecordNotFound):
-				app.invalidAuthenticationTokenResponse(w, r)
-			default:
-				app.serverErrorResponse(w, r, err)
-			}
-			return
-		}
+        // Check that the issuer is our application.
+        if claims.Issuer != "greenlight.alexedwards.net" {
+            app.invalidAuthenticationTokenResponse(w, r)
+            return
+        }
+
+        // Check that our application is in the expected audiences for the JWT.
+        if !claims.AcceptAudience("greenlight.alexedwards.net") {
+            app.invalidAuthenticationTokenResponse(w, r)
+            return
+        }
+
+        // At this point, we know that the JWT is all OK and we can trust the data in 
+        // it. We extract the user ID from the claims subject and convert it from a 
+        // string into an int64.
+        userID, err := strconv.ParseInt(claims.Subject, 10, 64)
+        if err != nil {
+            app.serverErrorResponse(w, r, err)
+            return
+        }
+
+        // Lookup the user record from the database.
+        user, err := app.models.Users.Get(userID)
+        if err != nil {
+            switch {
+            case errors.Is(err, data.ErrRecordNotFound):
+                app.invalidAuthenticationTokenResponse(w, r)
+            default:
+                app.serverErrorResponse(w, r, err)
+            }
+            return
+        }
 
 		// Call the contextSetUser() helper to add the user information to the request
 		// context.
